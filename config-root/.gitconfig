@@ -1,0 +1,16 @@
+[user]
+	email = charles.whelan@kroger.com
+	name = Chad Whelan
+[push]
+	autoSetupRemote = true
+[color]
+	ui = auto
+[pull]
+	rebase = true
+[alias]
+	lg = log  --graph
+	lb = log --show-linear-break
+[format]
+	pretty = %C(yellow)%h%Creset %ad | %Cgreen%s%Creset %Cred%d%Creset %Cblue[%an]
+[log]
+	date = short
