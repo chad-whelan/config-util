@@ -38,12 +38,13 @@ alias lrt='ls -Alrt'
   alias .6='cd ../../../../../..'
 
 
-# Common Github Commands
+# Maven Commands
   # Action Build Cmd
   # mvn --batch-mode --update-snapshots --settings .github/settings.xml clean verify jacoco:report -P run-failsafe
   alias mbuild='mvn --batch-mode --update-snapshots --settings .github/settings.xml clean verify jacoco:report'
   alias mcp="mvn clean package -Dmaven.test.skip=true"
 
+# Common Github Commands
   alias pull='git pull -p'
   alias push='git push'
   alias commit='git commit -am'
@@ -59,7 +60,7 @@ alias lrt='ls -Alrt'
   alias glog="git log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)' --all"
 
   # Set the base Github location
-  export GIT_HOME=$HOME/Dev
+  export GIT_HOME=$HOME/dev
 
   # Navigate to Github root
   alias githome='cd $GIT_HOME'
@@ -162,7 +163,7 @@ setopt HIST_SAVE_NO_DUPS
 ###
 
 # Go Tools
-path+=('/Users/cw87992/go/bin/')
+path+=($HOME/go/bin/)
 export GOPATH=~/dev/Go/gopath
 # export GOROOT=/opt/homebrew/Cellar/go/1.21.3/libexec      # Not sure if we need this.  `go env GOROOT` gives the same value and everything seems to work
 
