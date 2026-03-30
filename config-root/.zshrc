@@ -16,7 +16,14 @@ setopt interactive_comments     # Enable
   # %u - end underline
   # %S - start highlight 
   # %s - end  highlight 
-export PROMPT='%F{c}%n%f:%F{y}%~%f$ '
+  # %T - Time(HH:MM 24hr) 
+  # %t - Time(h:mm am/pm)
+
+# export PROMPT='%F{g}%T%f:%F{c}%n%f:%F{y}%~%f$ '
+export PROMPT='%F{g}%T%f:%F{y}%~%f$ '
+
+# Set XML Indent Value 
+export XMLLINT_INDENT="    "
 
 # Add homebrew to the path
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -24,6 +31,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 #set a default dir listing
 alias ll='ls -al'
 alias lrt='ls -Alrt'
+
+
+# Set Google Gemini project
+export GOOGLE_CLOUD_PROJECT=pji-digital-code-assist
 
 # Enable cdr to track directory navigation history
   autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
@@ -42,7 +53,10 @@ alias lrt='ls -Alrt'
   # Action Build Cmd
   # mvn --batch-mode --update-snapshots --settings .github/settings.xml clean verify jacoco:report -P run-failsafe
   alias mbuild='mvn --batch-mode --update-snapshots --settings .github/settings.xml clean verify jacoco:report'
-  alias mcp="mvn clean package -Dmaven.test.skip=true"
+  alias mcp="mvn clean package" 
+  alias mcpst="mvn clean package -Dmaven.test.skip=true"
+  alias mformat="mvn com.cosium.code:git-code-format-maven-plugin:format-code"
+
 
 # Common Github Commands
   alias pull='git pull -p'
@@ -50,20 +64,26 @@ alias lrt='ls -Alrt'
   alias commit='git commit -am'
   alias status='git status'
   alias switch='git switch'
-  #alias gmod='git merge origin/develop'
+  alias swtich='git switch'
   alias rebase='git rebase'
-  alias gstash='git stash'
+  alias stash='git stash -m'
+  alias findBranch="git branch -r --contains $1 "
+
+  gclone()
+  { 
+    git clone git@bitbucket.org:pjicode/$1.git;
+  }
 
   # Git Log Docs  
   # https://git-scm.com/docs/git-log#Documentation/git-log.txt---graph
   #alias glog='git log --pretty=format:"%C(yellow)%h%Creset %ad | %Cgreen%s%Creset %Cred%d%Creset %Cblue[%an]" --date=short --show-linear-break'
-  alias glog="git log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)' --all"
+  alias glog="git log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)'"
 
   # Set the base Github location
-  export GIT_HOME=$HOME/dev
+  export DEV_HOME=$HOME/dev/
 
   # Navigate to Github root
-  alias githome='cd $GIT_HOME'
+  alias githome='cd $DEV_HOME/BitBucket'
 
 
 # setup auto complete
@@ -83,60 +103,57 @@ alias tctxt='kubectl config use-context test-context'
 # Setup Autocomplete  for kubectl 
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
+# General aliases
+alias uuid="uuidgen | tr -d '\n' | pbcopy"
+alias dhome="cd ~/dev/"
+alias bb="cd ~/dev/BitBucket"
+alias dtmp="cd ~/dev/tmp"
 
 #set alias for inability to type
 alias grpe='grep '
+alias gerp='grep '
+alias vmi='vim '
+alias ivm='vim '
 
-# And set JAVA_HOME
-# Might change at new job 
-#export JAVA_HOME=/Library/Java/JavaVirtualMachines/default/Contents/Home
+#Find to Grep function 
+f2g() {
+
+  if [[ -v 3 ]]; then
+    GPARM=$3
+  else
+    GPARM="n"
+  fi
+
+  find . -name $1 -print0 | xargs -0 grep -$GPARM $2
+}
+
 
 # Manage Java Homes
-# Might change at new job
-alias java11='unset JAVA_HOME;export JAVA_HOME=$(/usr/libexec/java_home -v 11);java -version'
-alias java17='unset JAVA_HOME;export JAVA_HOME=$(/usr/libexec/java_home -v 17);java -version'
-alias java21='unset JAVA_HOME;export JAVA_HOME=$(/usr/libexec/java_home -v 21);java -version'
+alias java11='jenv global 11'
+alias java17='jenv global 17'
+alias java21='jenv global 21'
 alias jhome='echo $JAVA_HOME'
 alias jver='java -version'
+alias jvers='jenv versions'
 
 # Add JDK to the path
-path+=('$JAVA_HOME/bin')
+export PATH=$PATH:$JAVA_HOME/bin
 
 # Add psql to the path 
-path+=('/opt/homebrew/opt/libpq/bin')
+export PATH=$PATH:/opt/homebrew/opt/libpq/bin
 
 
 # Add local bin directory to the end of the path
-path+=($HOME/dev/local/bin)
+export PATH=$PATH:$HOME/dev/local/bin
 
 # Append rancher desktop to the path
-path+=($HOME/.rd/bin)
-
-# Or prepend it
-# path=($HOME/.rd/bin $path)
+export PATH=$PATH:$HOME/.rd/bin
 
 
-# AZ Settings
-export DEV_RG=""
-export PROD_RG=""
+# Add jenv to the path 
+export PATH=$HOME/.jenv/bin:$PATH
 
 # Dev Settup
-  export CRYPT_KEY=
-
-  # Run jascrypt decrypt.sh to decrypt client passwords:
-  # decrypt input=<encrypted password>= password=$CRYPT_KEY algorithm=PBEWITHMD5ANDDES ivGeneratorClassName=org.jasypt.iv.NoIvGenerator
-
-  # JFrog setup
-  #export ARTIFACTORY_USERNAME=charles.whelan@kroger.com
-  #export ARTIFACTORY_TOKEN=
-        
-  alias jfrog_auth='curl -u $ARTIFACTORY_USERNAME:$ARTIFACTORY_TOKEN https://???.jfrog.io/artifactory/api/npm/auth/'
-  
-  # JFrog IntelliJ setup
-  export JFROG_IDE_USERNAME=$ARTIFACTORY_USERNAME
-  export JFROG_IDE_ACCESS_TOKEN=$ARTIFACTORY_TOKEN
-
-
   # Terraform aliases
   alias tfmt='alias tfmt;terraform fmt -recursive'
   alias tfmtchk='alias tfmtchk;terraform fmt -check -recursive'
@@ -144,7 +161,7 @@ export PROD_RG=""
   alias tinit='alias tinit;terraform init -backend=false -upgrade'
 
   # ReactJS Setup
-  export NPM_TOKEN=
+  #export NPM_TOKEN=
 
 
 # Tweak history settings
@@ -163,11 +180,15 @@ setopt HIST_SAVE_NO_DUPS
 ###
 
 # Go Tools
-path+=($HOME/go/bin/)
-export GOPATH=~/dev/Go/gopath
+#export PATH=$PATH:$HOME/go/bin 
+#export GOPATH=~/dev/Go/gopath
+
 # export GOROOT=/opt/homebrew/Cellar/go/1.21.3/libexec      # Not sure if we need this.  `go env GOROOT` gives the same value and everything seems to work
 
 
+# Python Alias
+alias python=python3
+alias pip=pip3
 
 activate()
 {
@@ -184,10 +205,19 @@ activate()
   fi;
 }
 
-
  
-# Finally Set the PATH variable
-typeset -U path
-export PATH
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/chad_whelan/Downloads/tmp/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/chad_whelan/Downloads/tmp/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/chad_whelan/Downloads/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/chad_whelan/Downloads/tmp/google-cloud-sdk/completion.zsh.inc'; fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
 
 
