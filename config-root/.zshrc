@@ -59,8 +59,9 @@ export GOOGLE_CLOUD_PROJECT=pji-digital-code-assist
 
 
 # Common Github Commands
-  alias pull='git pull -p'
+  alias pull='git pull --rebase -p'
   alias push='git push'
+  alias pForceLease='git push --force-with-lease'
   alias commit='git commit -am'
   alias status='git status'
   alias switch='git switch'

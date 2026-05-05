@@ -1,16 +1,21 @@
 [user]
-	email = cwhelan9534@gmail.com
-	name = Chad Whelan
+  email = cwhelan9534@gmail.com
+  name = Chad Whelan
 [push]
-	autoSetupRemote = true
+  autoSetupRemote = true
 [color]
-	ui = auto
+  ui = auto
 [pull]
-	rebase = true
+  rebase = true
 [alias]
-	lg = log  --graph
-	lb = log --show-linear-break
+  lg = log  --graph
+  lb = log --show-linear-break
 [format]
-	pretty = %C(yellow)%h%Creset %ad | %Cgreen%s%Creset %Cred%d%Creset %Cblue[%an]
+  pretty = %C(yellow)%h%Creset %ad | %Cgreen%s%Creset %Cred%d%Creset %Cblue[%an]
 [log]
-	date = short
+  date = short
+# Not sure these work...
+#[core]
+#  pager = diff-so-fancy | less --tabs=4 -RFX
+#[interactive]
+#  diffFilter = diff-so-fancy --patch
